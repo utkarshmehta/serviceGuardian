@@ -1,6 +1,7 @@
 # Service Guardian
 
 **An autonomous agent that monitors infrastructure, investigates root causes, and resolves production incidents without human intervention.**
+![Uploading image.png…]()
 
 ## Overview
 
