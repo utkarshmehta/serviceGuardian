@@ -66,6 +66,14 @@ while (goal !== COMPLETE) {
 
 This loops runs inside the infrastructure, behind the firewall, ensuring sensitive data never leaves the control boundary except for the inference tokens.
 
+## See It In Action
+
+We deployed the Service Guardian to a live environment and introduced a breaking schema change.
+The following video demonstrates the agent detecting the crash, analyzing the SQL mismatch, and filing a JIRA ticket—completely autonomously.
+
+![Demo Video Thumbnail](demo_gif_latest.gif)
+*(Click above or [Watch the full video](demo_vid_new_1.mp4))*
+
 ## Why This Matters for Architects
 
 We usually define "architecture" as the structure of the software itself—classes, interfaces, databases.
