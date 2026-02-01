@@ -1,58 +1,53 @@
-# Service Guardian 🛡️
+# Service Guardian
 
-**An autonomous AI agent that lives inside your infrastructure, monitors your services, and fixes production issues in seconds.**
+**An autonomous agent that monitors infrastructure, investigates root causes, and resolves production incidents without human intervention.**
 
-> "Don't just observe your service. Guard it."
+## Overview
 
-![Architecture](architecture.mermaid)
+The Service Guardian represents a shift from passive monitoring to active stewardship. Unlike traditional automation scripts, this agent possesses reasoning capabilities allowing it to navigate unforeseen error states, analyze source code context, and execute complex remediation workflows autonomously.
 
-(Note: You can view the architecture diagram by pasting the content of `architecture.mermaid` into [Mermaid Live](https://mermaid.live))
+![Architecture Diagram](architecture.mermaid)
 
-## 📖 The Concept: Service Guardian Pattern
+(Note: Render the architecture diagram using [Mermaid Live](https://mermaid.live))
 
-Traditional SRE involves a human reacting to a passive dashboard. The **Service Guardian** completely inverts this model.
+## Live Demonstration
 
-It is an active, autonomous agent that:
-1.  **Listens** to your service's alerts (Webhooks/Events).
-2.  **Investigates** the root cause by reading source code and logs (via MCP).
-3.  **Reasons** about the failure using high-speed LLMs (Gemini 2.5 Flash).
-4.  **Acts** to resolve the issue (Files JIRA tickets, posts Slack summaries, or even patches code).
+The following demonstration shows the agent detecting a critical database failure, identifying a syntax error in the source code, and filing a comprehensive JIRA ticket—all in under 45 seconds.
 
-This project is a reference implementation of a Service Guardian built for a Node.js Analytics Service.
+![Service Guardian Demo](demo_gif_latest.gif)
 
-## 🏗️ Architecture
+## The Service Guardian Pattern
 
-The system relies on the **Model Context Protocol (MCP)** to give the AI "Hands" and **Google Gemini 2.5 Flash** to give it a "Brain".
+In modern distributed systems, the "Mean Time to Resolution" (MTTR) is often dominated by context switching and manual investigation. The Service Guardian pattern aims to eliminate this latency by embedding an intelligent agent directly into the operational loop.
 
-*   **Brain**: `Google Gemini 2.5 Flash`. Chosen for its massive context window (to read huge log files/codebases) and sub-second latency.
-*   **Hands**: `Model Context Protocol (MCP)`.
-    *   `filesystem-mcp`: For reading source code and grepping logs.
-    *   `atlassian-mcp`: For searching and creating JIRA tickets.
-    *   `slack-mcp`: For communicating with the team.
-*   **Body**: `Node.js`. A lightweight event loop that orchestrates the tool calls and ensures safety (preventing infinite loops).
+The agent operates on a continuous feedback loop:
+1.  **Observation**: Listens for high-fidelity signals (Webhooks, Error Streams).
+2.  **Orientation**: Gathering context via forensic analysis of logs, recent commits, and source code.
+3.  **Decision**: Leveraging Large Language Model (LLM) reasoning to determine the root cause.
+4.  **Action**: Executing remediations using standardized interfaces (JIRA, Slack, CI/CD).
 
-### workflow
+## Architecture
 
-1.  **Alert Trigger**: The service throws a 500 Error. A webhook hits the Guardian.
-2.  **Context Assembly**: The Guardian pulls the stack trace and recent git history.
-3.  **Forensic Analysis**: It uses `grep` to locate the crashing file and reads the code.
-4.  **Determination**: It identifies the bug (e.g., "Missing semicolon in `db.connect()`").
-5.  **Resolution**: It files a fully formatted JIRA ticket with the fix and notifies the #sre channel.
+This project is built on three core pillars:
 
-**Total Time:** < 45 seconds.
+### 1. The Reasoning Core (Google Gemini 2.5 Flash)
+We utilize Gemini 2.5 Flash for its high throughput and extended context window. This allows the agent to ingest entire file trees and long log streams in a single inference pass, enabling "YOLO Mode" detection where the agent can spot correlations that human operators might miss.
 
-## 🚀 Technical Highlights
+### 2. The Interface Layer (Model Context Protocol)
+To interact with the external world, the agent uses the **Model Context Protocol (MCP)**. This creates a standardized abstraction layer between the AI and the infrastructure.
+*   **Filesystem MCP**: Provides read/grep capabilities for forensic code analysis.
+*   **Atlassian MCP**: Manages lifecycle of incident tickets in JIRA.
+*   **Slack MCP**: Handles team communication and broadcasting.
 
-*   **Autonomous "YOLO" Mode**: The agent runs a continuous "OODA Loop" (Observe, Orient, Decide, Act) until the goal is met.
-*   **Safety Governors**: Built-in state machine prevents the agent from getting stuck in infinite loops.
-*   **Real-time Stream**: The "Consciousness" of the agent is streamed via WebSocket to a dashboard, allowing engineers to watch its thought process live (Matrix-style).
+### 3. The Orchestrator (Node.js)
+A lightweight Node.js event loop manages the agent's lifecycle, ensuring operational safety through step governors and state management.
 
-## 🛠️ Setup & Usage
+## Setup & Usage
 
 ### Prerequisites
 *   Node.js v16+
-*   Gemini API Key
-*   Access to an MCP-compatible Atlassian/Slack instance (optional for local demo)
+*   Google Gemini API Key
+*   Access to MCP-compatible tool servers
 
 ### Installation
 
@@ -62,29 +57,15 @@ cd serviceGuardian
 npm install
 ```
 
-### Running the Guardian
+### Running the Agent
 
 ```bash
-# Start the Guardian Agent
+# Start the Service Guardian
 node sre-agent.js
 ```
 
-The UI will be available at `http://localhost:3000`.
+The operational dashboard will be accessible at `http://localhost:3000`.
 
-## 📂 Repository Structure
+## License
 
-*   `sre-agent.js`: The core agent logic and orchestrator.
-*   `services/`: Example target services (the "victim" services we break).
-*   `public/`: The "Matrix-style" frontend dashboard.
-*   `architecture.mermaid`: Detailed system diagram.
-
-## 🤝 Contributing
-
-This is a proof-of-concept for the Service Guardian pattern. Pull requests to add new MCP servers (PagerDuty, Datadog, GitHub) are welcome!
-
-## 📜 License
-
-MIT
-
----
-*Built with ❤️ by Utkarsh Mehta*
+MIT License
