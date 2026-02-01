@@ -1,0 +1,6 @@
+{
+  "projectKey": "KAN",
+  "summary": "[TRIAGE] ALERT: critical syntax error in check-db.ts",
+  "description": "RCA: Extraneous 'return;' and closing brace '}' at the end of the file (lines 35-36). This causes a syntax error as they are not within any function or block.\n\nEXACT line to fix:\nRemove lines 35 and 36 in check-db.ts.",
+  "issueType": "Task"
+}
