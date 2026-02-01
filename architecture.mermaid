@@ -6,41 +6,29 @@ flowchart TD
     classDef mcp fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#e65100;
     classDef infra fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px,stroke-dasharray: 5 5,color:#1b5e20;
 
-    %% -----------------------------
     %% TOP: EXTERNAL TRIGGERS
-    %% -----------------------------
     subgraph UserSpace ["External Ecosystem"]
-        direction TB
-        User((User/Dev))
+        User((User Dev))
         Slack["Slack Workspace"]:::cloud
         JIRA["Atlassian JIRA"]:::cloud
-        
-        %% Force stack
-        User ~~~ Slack ~~~ JIRA
     end
 
-    %% -----------------------------
     %% MIDDLE: INFRASTRUCTURE
-    %% -----------------------------
     subgraph Infrastructure ["Production Infrastructure"]
         class Infrastructure infra
-        direction TB
         
-        TargetService["Target Service<br/>(MeatBar Analytics)"]:::cloud
+        TargetService["Target Service (Analytics)"]:::cloud
         
         subgraph Guardian ["The Service Guardian"]
             class Guardian agent
-            direction TB
             
-            Orchestrator["Node.js Orchestrator<br/>(sre-agent.js)"]
+            Orchestrator["Node.js Orchestrator"]
             PromptEngine["Prompt Engine"]
             
-            subgraph ToolLayer ["Model Context Protocol (MCP)"]
+            subgraph ToolLayer ["Model Context Protocol MCP"]
                 class ToolLayer mcp
-                direction TB
                 MCP_Client["MCP Host"]
                 
-                %% Stacked Tools
                 FS_Server["Filesystem Server"]
                 Slack_Server["Slack MCP Server"]
                 Jira_Server["Atlassian MCP Server"]
@@ -52,33 +40,21 @@ flowchart TD
         end
     end
 
-    %% -----------------------------
     %% BOTTOM: INTELLIGENCE
-    %% -----------------------------
     subgraph Intelligence ["Cloud Intelligence"]
-        Gemini["Google Gemini 2.5 Flash<br/>(Reasoning Core)"]:::cloud
+        Gemini["Google Gemini 2.5 Flash"]:::cloud
     end
 
-    %% -----------------------------
     %% CONNECTIONS
-    %% -----------------------------
-    
-    %% Alert Flow
     TargetService -- "1. Trigger Alert" --> Orchestrator
-    
-    %% Reasoning Loop
     Orchestrator -- "2. Context" --> PromptEngine
     PromptEngine --> Gemini
     Gemini -- "3. Decision" --> Orchestrator
-    
-    %% Action Flow
     Orchestrator -- "4. Execute" --> MCP_Client
     
-    %% Tool Impacts
     FS_Server -- "Debug" --> TargetService
     Slack_Server -- "Notify" --> Slack
     Jira_Server -- "Ticket" --> JIRA
     
-    %% Feedback
     User -.-> |"View Dashboard"| Orchestrator
 ```
