@@ -6,7 +6,10 @@
 
 The Service Guardian represents a shift from passive monitoring to active stewardship. Unlike traditional automation scripts, this agent possesses reasoning capabilities allowing it to navigate unforeseen error states, analyze source code context, and execute complex remediation workflows autonomously.
 
-![Architecture Diagram](architecture.mermaid)
+Architecture Diagram
+
+<img width="1142" height="783" alt="image" src="https://github.com/user-attachments/assets/f61c966b-61ed-48b0-a879-d512b8ce4f76" />
+
 
 (Note: Render the architecture diagram using [Mermaid Live](https://mermaid.live))
 
