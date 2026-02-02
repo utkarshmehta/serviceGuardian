@@ -57,6 +57,36 @@ cd serviceGuardian
 npm install
 ```
 
+### Local Development Setup
+
+To run the agent locally with full Slack/JIRA integration, you need to expose your local server to the internet so Slack webhooks can reach it.
+
+**1. Configure Environment Variables**
+Create a `.env` file in the root directory:
+```env
+GEMINI_API_KEY=your_key_here
+SLACK_BOT_TOKEN=xoxb-your-token
+SLACK_SIGNING_SECRET=your-secret
+JIRA_API_TOKEN=your-token
+JIRA_EMAIL=your-email
+JIRA_DOMAIN=your-domain.atlassian.net
+```
+
+**2. Setup ngrok for Tunneling**
+We use `ngrok` to create a secure tunnel to your localhost.
+1.  [Install ngrok](https://ngrok.com/download).
+2.  Start the tunnel on port 3000:
+    ```bash
+    ngrok http 3000
+    ```
+3.  Copy the forwarding URL (e.g., `https://a1b2c3d4.ngrok-free.app`).
+
+**3. Configure Slack App**
+*   Go to [api.slack.com/apps](https://api.slack.com/apps).
+*   **Event Subscriptions**: Set the Request URL to `https://<your-ngrok-url>/slack/events`.
+*   **OAuth & Permissions**: Add Redirect URL `https://<your-ngrok-url>/oauth/callback`.
+*   **Reinstall App**: Re-install the app to your workspace to propagate changes.
+
 ### Running the Agent
 
 ```bash
